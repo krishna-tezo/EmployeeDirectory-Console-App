@@ -5,7 +5,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 class Program
 {
-    
+
     public static void Main(string[] args)
     {
         string employeesData = File.ReadAllText("C:\\Users\\Krishna.a\\Desktop\\Daily Tasks\\EmployeeDirectory\\EmployeeDirectory\\DAL\\employees.json");
@@ -14,17 +14,34 @@ class Program
         List<Employee> employees = System.Text.Json.JsonSerializer.Deserialize<List<Employee>>(employeesData);
         List<Role> roles = System.Text.Json.JsonSerializer.Deserialize<List<Role>>(rolesData);
 
-        //Console.Clear();
+        Console.Clear();
 
-        var queriedEmployees = from employee in employees
-                    join role in roles on employee.RoleId equals role.Id
-                    where employee.FirstName is not "Krishnaa"
-                    select new { Name = $"{employee.FirstName} {employee.LastName}", DepartmentName = role.Department };
 
-        foreach (var emp in queriedEmployees)
-        {
-            Console.WriteLine($"{emp.Name} - {emp.DepartmentName}");
-        }
+        //Join
+        //var queriedEmployees = from employee in employees
+        //                       join role in roles on employee.RoleId equals role.Id
+        //                       where employee.FirstName is not "Krishnaa"
+        //                       select new { Name = $"{employee.FirstName} {employee.LastName}", DepartmentName = role.Department };
+
+        //foreach (var emp in queriedEmployees)
+        //{
+        //    Console.WriteLine($"{emp.Name} - {emp.DepartmentName}");
+        //}
+
+        var queriedEmployees =
+            from employee in employees
+            where employee.Id == "TZ0001"
+            select employee;
+
+
+        Console.WriteLine(queriedEmployees.Count());
+
+        //foreach(Employee employee in queriedEmployees)
+        //{
+        //    Console.WriteLine(employee);
+        //}
+
+
     }
-    
+
 }
