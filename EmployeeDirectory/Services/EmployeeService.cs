@@ -1,31 +1,35 @@
 ﻿using EmployeeDirectory.DAL;
 using EmployeeDirectory.Interfaces;
 using EmployeeDirectory.Models;
-using System.Text.RegularExpressions;
 namespace EmployeeDirectory.Services
 {
+    
     public class EmployeeService : IEmployeeService
     {
-
+        List<Employee> employees = [];
+        private IRoleService roleService;
+        public EmployeeService(IRoleService roleService)
+        {
+            this.roleService = roleService;
+            this.employees = this.GetEmployees();
+        }
         public bool DoesEmployeeIdExist(string id)
         {
-            List<Employee> employees = this.GetEmployees();
             return employees.Any(employee => employee.Id == id);
         }
         public void AddEmployee(Employee employee)
         {
-            List<Employee> employees = JsonDataHandler.GetEmployeesDataFromJson();
             employees.Add(employee);
-            JsonDataHandler.UpdateEmployeesDataToJson(employees);
+            JsonDataHandler.UpdateEmployeesDataToJson<Employee>(employees, "employee");
         }
 
         public int DeleteEmployee(string empId)
         {
             //TODO: Soft delete
-            List<Employee> employees = JsonDataHandler.GetEmployeesDataFromJson();
-            if(employees.RemoveAll(emp => emp.Id == empId) > 0)
+            if (employees.RemoveAll(emp => emp.Id == empId) > 0)
             {
-                JsonDataHandler.UpdateEmployeesDataToJson(employees);
+                JsonDataHandler.UpdateEmployeesDataToJson<Employee>(employees, "employee");
+
                 return 1;
             }
             else
@@ -36,23 +40,19 @@ namespace EmployeeDirectory.Services
 
         public void UpdateEmployee(Employee employee)
         {
-            List<Employee> employees = JsonDataHandler.GetEmployeesDataFromJson();
-
             int indexOfEmployee = employees.FindIndex(emp => employee.Id == emp.Id);
             employees[indexOfEmployee] = employee;
-
-            JsonDataHandler.UpdateEmployeesDataToJson(employees);
+            JsonDataHandler.UpdateEmployeesDataToJson<Employee>(employees, "employee");
         }
 
         public List<Employee> GetEmployees()
         {
-            List<Employee> employees = JsonDataHandler.GetEmployeesDataFromJson();
+            List<Employee> employees = JsonDataHandler.GetDataFromJson<Employee>("employee");
             return employees;
         }
 
         public Employee GetEmployeeById(string id)
         {
-            List<Employee> employees = JsonDataHandler.GetEmployeesDataFromJson();
             return employees.Find(emp => emp.Id == id);
         }
     }

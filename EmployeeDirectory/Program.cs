@@ -1,11 +1,17 @@
-﻿using EmployeeDirectory.UI;
+﻿using Microsoft.Extensions.DependencyInjection;
+using EmployeeDirectory.Services;
+
 namespace EmployeeDirectory
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
-        {
-            MainMenu.ShowMainMenu();
+        { 
+            IServiceCollection services = new ServiceCollection();
+            StartupService startupService = new StartupService(services);
+
+            startupService.Configure();
+            startupService.ShowMainMenu();
         }
     }
 }

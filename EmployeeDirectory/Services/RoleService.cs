@@ -5,28 +5,27 @@ using EmployeeDirectory.Models;
 namespace EmployeeDirectory.Services
 {
     internal class RoleService : IRoleService
-    {   
-        public bool RoleValidator(string roleId)
+    {
+        List<Role> roles = new List<Role>();
+        public RoleService()
         {
-            List<Role> roles = new List<Role>();
-            return roles.Any(role => role.Id == roleId);
+            this.roles = GetAllRoles();
         }
         public void AddRole(Role role)
         {
-            List<Role> roles = JsonDataHandler.GetRolesDataFromJson();
             roles.Add(role);
-            JsonDataHandler.UpdateRolesDataToJson(roles);
+            JsonDataHandler.UpdateEmployeesDataToJson(roles, "roles");
+
         }
 
         public List<Role> GetAllRoles()
         {
-            List<Role> roles = JsonDataHandler.GetRolesDataFromJson();
+            List<Role> roles = JsonDataHandler.GetDataFromJson<Role>("roles");
             return roles;
         }
 
         public Role GetRoleDetailsById(string id)
         {
-            List<Role> roles = GetAllRoles();
             return roles.Find(role => role.Id == id);
         }
 
@@ -37,15 +36,12 @@ namespace EmployeeDirectory.Services
 
         public List<string> GetAllDepartments()
         {
-            List<Role> roles = JsonDataHandler.GetRolesDataFromJson();
-
             return roles.Select(role => role.Department).Distinct().ToList();
         }
 
         public List<string> GetAllRoleNamesByDepartment(string department)
         {
-            List<Role> roles = JsonDataHandler.GetRolesDataFromJson();
-            
+
             return roles.Where(role => role.Department == department).Select(role => role.Name).Distinct().ToList();
 
             //List<string> roleNames = new List<string>();
@@ -64,9 +60,8 @@ namespace EmployeeDirectory.Services
 
         public List<string> GetAllLocationByDepartmentAndRoleNames(string roleName)
         {
-            List<Role> roles = JsonDataHandler.GetRolesDataFromJson();
 
-            return roles.Where(role=>role.Name==roleName).Select(role=> role.Location).Distinct().ToList();
+            return roles.Where(role => role.Name == roleName).Select(role => role.Location).Distinct().ToList();
         }
     }
 }

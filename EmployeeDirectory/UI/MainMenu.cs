@@ -1,14 +1,25 @@
-﻿using EmployeeDirectory.UI.Menus;
+﻿using EmployeeDirectory.Interfaces;
+using EmployeeDirectory.UI.Menus;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace EmployeeDirectory.UI
 {
     public class MainMenu
     {
-        public static void ShowMainMenu()
+
+        private IEmployeeMenu employeeMenu;
+        private IRoleMenu roleMenu;
+
+        public MainMenu(IEmployeeMenu employeeMenu, IRoleMenu roleMenu)
+        {
+            this.employeeMenu = employeeMenu;
+            this.roleMenu = roleMenu;
+        }
+
+        public void ShowMainMenu()
         {
             Console.Clear();
-            EmployeeMenu employeeMenu = new EmployeeMenu();
-            RoleMenu roleMenu = new RoleMenu();
             string choice;
             //update the name
             bool loopMenu = true;

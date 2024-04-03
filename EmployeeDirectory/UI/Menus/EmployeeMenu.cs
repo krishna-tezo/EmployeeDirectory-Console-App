@@ -1,20 +1,21 @@
-﻿using EmployeeDirectory.Models;
-using EmployeeDirectory.UI.UIServices;
+﻿using EmployeeDirectory.Interfaces;
 
 namespace EmployeeDirectory.UI.Menus
 {
-    public class EmployeeMenu
+    public class EmployeeMenu : IEmployeeMenu
     {
+        private IUIService uiService;
+        public EmployeeMenu(IUIService uiService)
+        {
+            this.uiService = uiService;
+        }
         public void ShowEmployeeMenu()
         {
             Console.Clear();
-
-            UIService uiService = new UIService();
-
             Console.WriteLine("\nWelcome to Employee Management\n");
             string choice;
             bool loopMenu = true;
-            
+
             while (loopMenu)
             {
                 Console.WriteLine("\nEmployee Menu\n");
@@ -25,7 +26,7 @@ namespace EmployeeDirectory.UI.Menus
                 Console.WriteLine("5. Delete Employee");
                 Console.WriteLine("6. Go Back");
                 Console.Write("\nChoose Any option:");
-                
+
                 choice = Console.ReadLine();
                 switch (choice)
                 {

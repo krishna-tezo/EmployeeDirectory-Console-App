@@ -1,13 +1,19 @@
-﻿using EmployeeDirectory.Models;
+﻿using EmployeeDirectory.Interfaces;
+using EmployeeDirectory.Models;
 using EmployeeDirectory.UI.UIServices;
 
 namespace EmployeeDirectory.UI.Menus
 {
-    internal class RoleMenu
+    internal class RoleMenu : IRoleMenu
     {
+        private IUIService uiService;
+        public RoleMenu(IUIService uiService)
+        {
+            this.uiService = uiService;
+        }
         public void ShowRoleMenu()
         {
-            UIService uiService = new UIService();
+
             List<Role> roles = new List<Role>();
             string roleId = string.Empty;
             Console.WriteLine("\nWelcome to Role Management\n");

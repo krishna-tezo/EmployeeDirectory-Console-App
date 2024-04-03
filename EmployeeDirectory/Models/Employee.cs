@@ -8,7 +8,7 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Dob { get; set; }  //datetime
-        public string MobNumber { get; set; }  //fullname
+        public string MobileNumber { get; set; }
         public string ManagerName { get; set; }
         public string ProjectName { get; set; }
         public string JoinDate { get; set; }
