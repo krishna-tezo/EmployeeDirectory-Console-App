@@ -11,10 +11,6 @@ namespace EmployeeDirectory.Services
         {
             this.Employees = this.GetEmployees();
         }
-        public bool DoesEmployeeIdExist(string id)
-        {
-            return Employees.Any(employee => employee.Id == id);
-        }
         public Employee AddEmployee(Employee employee)
         {
             Employees.Add(employee);

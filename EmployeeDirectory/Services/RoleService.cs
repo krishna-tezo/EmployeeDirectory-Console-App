@@ -11,11 +11,11 @@ namespace EmployeeDirectory.Services
         {
             this.Roles = GetAllRoles();
         }
-        public void AddRole(Role role)
+        public Role AddRole(Role role)
         {
             Roles.Add(role);
             JsonDataHandler.UpdateEmployeesDataToJson(Roles, "roles");
-
+            return role;
         }
 
         public List<Role> GetAllRoles()
@@ -47,7 +47,6 @@ namespace EmployeeDirectory.Services
 
         public List<string> GetAllLocationByDepartmentAndRoleNames(string roleName)
         {
-
             return Roles.Where(role => role.Name == roleName).Select(role => role.Location).Distinct().ToList();
         }
     }

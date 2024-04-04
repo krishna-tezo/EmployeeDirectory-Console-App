@@ -9,15 +9,15 @@ namespace EmployeeDirectory.UI.UIServices
     internal class UIService : IUIService
     {
 
-        private IEmployeeService employeeService;
-        private IRoleService roleService;
+        private IRoleController roleController;
+        private IEmployeeController employeeController;
         private IValidator validator;
 
-        public UIService(IEmployeeService employeeService, IRoleService roleService, IValidator validator)
+        public UIService(IEmployeeController employeeController, IRoleController roleController, IValidator validator)
         {
-            this.employeeService = employeeService;
-            this.roleService = roleService;
+            this.roleController = roleController;
             this.validator = validator;
+            this.employeeController = employeeController;
         }
 
         #region "Employee Service"
@@ -26,34 +26,41 @@ namespace EmployeeDirectory.UI.UIServices
         public void AddEmployee()
         {
             Console.WriteLine("\n----Welcome to Add Employee Form----\n");
-            Employee employee = new Employee();
-            GetEmployeeDetailsFromConsole(employee, "Add");
-
+            Employee employee = GetEmployeeDetailsFromConsole(new Employee(), "Add");
+            employeeController.AddEmployee(employee);
+            Console.WriteLine("The employee is added successfully");
         }
 
         //Edit Employee
         public void EditEmployee()
         {
+            Employee employee;
             Console.WriteLine("\n----Welcome To Edit Employee Form----\n");
 
             string? empId;
             do
             {
-                Console.Write("Input Id of the Employee which you want to Edit: ");
+                Console.Write("Input Id of the Employee which you want to Edit or -1 to exit: ");
                 empId = Console.ReadLine();
-                if (empId.Equals(""))
+                if (empId.Equals("-1"))
+                {
+                    break;
+                }
+                else if (empId.Equals(""))
                 {
                     Console.WriteLine("Don't leave it blank");
-
                 }
-                else if (!employeeService.DoesEmployeeIdExist(empId))
+                else if (employeeController.GetEmployeeById(empId)==null)
                 {
                     Console.WriteLine($"{empId} does not exist");
                 }
                 else
-                {
-                    GetEmployeeDetailsFromConsole(employeeService.GetEmployeeById(empId), "Edit", empId);
-                    Console.WriteLine($"Employee with {empId} is updated successfully");
+                {   
+                    employee = employeeController.GetEmployeeById(empId);
+
+                    employee = GetEmployeeDetailsFromConsole(employee, "Edit", empId);
+                    employeeController.EditEmployee(employee);
+                    Console.WriteLine($"Employee with id {empId} is updated successfully");
                     break;
                 }
 
@@ -62,7 +69,7 @@ namespace EmployeeDirectory.UI.UIServices
         }
 
         //Get Employee Details From Console
-        public void GetEmployeeDetailsFromConsole(Employee employee, string type, string empId = "")
+        public Employee GetEmployeeDetailsFromConsole(Employee employee, string type, string empId = "")
         {
 
             Console.WriteLine("----Input Employee Details----");
@@ -207,21 +214,11 @@ namespace EmployeeDirectory.UI.UIServices
             employee.ProjectName = projectName;
             employee.IsDeleted = false;
 
-            string roleId = roleService.GenerateRoleId(roleName, location);
+            string roleId = roleController.GetRoleId(roleName, location);
 
             employee.RoleId = roleId;
 
-            if (type.Equals("Add"))
-            {
-                employeeService.AddEmployee(employee);
-                Console.WriteLine("The employee is added successfully");
-            }
-
-            else
-            {
-                employeeService.UpdateEmployee(employee);
-                Console.WriteLine("The employee is updated successfully");
-            }
+            return employee;
         }
 
         //Get Employee Role Details From Roles Data
@@ -233,7 +230,7 @@ namespace EmployeeDirectory.UI.UIServices
             if (parameter.Equals("department"))
             {
                 Console.WriteLine("\n\n----Available Departments----\n");
-                options = roleService.GetAllDepartments();
+                options = roleController.GetAllDepartments();
                 options.ForEach((option) =>
                 {
                     Console.WriteLine(option);
@@ -242,12 +239,12 @@ namespace EmployeeDirectory.UI.UIServices
             else if (parameter.Equals("roleName"))
             {
                 Console.WriteLine($"\n\n----Available Roles Under {department}----\n");
-                options = roleService.GetAllRoleNamesByDepartment(department);
+                options = roleController.GetAllRoleNamesByDepartment(department);
             }
             else
             {
                 Console.WriteLine($"\n\n----Available Locations Under {roleName}----\n");
-                options = roleService.GetAllLocationByDepartmentAndRoleNames(roleName);
+                options = roleController.GetAllLocationByDepartmentAndRoleNames(roleName);
             }
 
             Dictionary<string, string> optionsMap = new Dictionary<string, string>();
@@ -283,7 +280,7 @@ namespace EmployeeDirectory.UI.UIServices
         //View Employees in Console
         public void ViewEmployees()
         {
-            List<Employee> employees = employeeService.GetEmployees();
+            List<Employee> employees = employeeController.ViewEmployees();
 
             if (employees is null || employees.Count == 0)
                 Console.WriteLine("No Employees To Show");
@@ -299,7 +296,7 @@ namespace EmployeeDirectory.UI.UIServices
             {
                 Console.WriteLine("Enter the emp Id to fetch the employee or -1 to exit:");
                 string? empId = Console.ReadLine();
-                Employee employee = employeeService.GetEmployeeById(empId);
+                Employee employee = employeeController.ViewEmployee(empId);
                 if (empId.Equals("-1"))
                 {
                     break;
@@ -320,15 +317,18 @@ namespace EmployeeDirectory.UI.UIServices
         //Delete Employee
         public void DeleteEmployee()
         {
-            bool takeInput = true;
-            while (takeInput)
+            while (true)
             {
                 Console.WriteLine("Enter Employee Id You want to delete OR -1 to exit");
                 string empId = Console.ReadLine() ?? string.Empty;
                 Employee employee;
-                if (empId != "-1")
+                if (empId.Equals(""))
                 {
-                    employee = employeeService.DeleteEmployee(empId);
+                    Console.WriteLine("Don't leave blank");
+                }
+                else if (empId != "-1")
+                {
+                    employee = employeeController.DeleteEmployee(empId);
                     if (employee == null)
                         Console.WriteLine("Employee was not found");
                     else
@@ -336,7 +336,7 @@ namespace EmployeeDirectory.UI.UIServices
                 }
                 else
                 {
-                    takeInput = false;
+                    break;
                 }
             }
         }
@@ -349,7 +349,7 @@ namespace EmployeeDirectory.UI.UIServices
             string headers = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|", "EmpId", "Name", "Role", "Department", "Location", "Join Date", "Manager Name", "Project Name");
             Console.WriteLine(headers);
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            List<Role> roles = roleService.GetAllRoles();
+            List<Role> roles = roleController.ViewRoles();
 
             employees.Join(roles, emp => emp.RoleId, role => role.Id, (employee, role) =>
             new
@@ -380,7 +380,7 @@ namespace EmployeeDirectory.UI.UIServices
             string headers = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|", "EmpId", "Name", "Role", "Department", "Location", "Join Date", "Manager Name", "Project Name");
             Console.WriteLine(headers);
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            Role role = roleService.GetRoleDetailsById(employee.RoleId);
+            Role role = roleController.GetRole(employee.RoleId);
             string empData = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|", employee.Id, employee.FirstName + " " + employee.LastName, role.Name, role.Department, role.Location, employee.JoinDate.ToString("MM/dd/yyyy"), employee.ManagerName, employee.ProjectName);
             Console.WriteLine(empData);
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
@@ -415,7 +415,7 @@ namespace EmployeeDirectory.UI.UIServices
                 Console.Write("Enter Description:");
                 description = Console.ReadLine();
 
-                roleId = roleService.GenerateRoleId(roleName, location);
+                roleId = roleController.GetRoleId(roleName, location);
 
                 if (DoesRoleIdExist(roleId))
                     Console.WriteLine("This role already exists");
@@ -432,19 +432,19 @@ namespace EmployeeDirectory.UI.UIServices
             role.Description = description;
 
 
-            roleService.AddRole(role);
+            roleController.Add(role);
             Console.WriteLine("New Role has been added");
         }
 
         public bool DoesRoleIdExist(string roleId)
         {
-            List<Role> roles = roleService.GetAllRoles();
+            List<Role> roles = roleController.ViewRoles();
             return roles.Any(role => role.Id == roleId);
         }
 
         public void ViewAllRoles()
         {
-            List<Role> roles = roleService.GetAllRoles();
+            List<Role> roles = roleController.ViewRoles();
 
             ShowRolesDataInTabularFormat(roles);
         }

@@ -1,10 +1,8 @@
 ﻿using EmployeeDirectory.Interfaces;
-using EmployeeDirectory.Models;
-using EmployeeDirectory.UI.UIServices;
 
 namespace EmployeeDirectory.UI.Menus
 {
-    internal class RoleMenu : IRoleMenu
+    public class RoleMenu : IRoleMenu
     {
         private IUIService uiService;
         public RoleMenu(IUIService uiService)

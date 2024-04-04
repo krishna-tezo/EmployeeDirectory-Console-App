@@ -9,7 +9,7 @@ namespace EmployeeDirectory.Interfaces
         void DeleteEmployee();
         bool DoesRoleIdExist(string roleId);
         void EditEmployee();
-        void GetEmployeeDetailsFromConsole(Employee employee, string type, string empId = "");
+        Employee GetEmployeeDetailsFromConsole(Employee employee, string type, string empId = "");
         string GetEmployeeRoleDetails(string parameter, string department = "", string roleName = "");
         void ShowEmployeesDataInTabularFormat(Employee employee);
         void ShowEmployeesDataInTabularFormat(List<Employee> employees);

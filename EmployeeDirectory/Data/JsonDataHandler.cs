@@ -1,5 +1,4 @@
-﻿using EmployeeDirectory.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace EmployeeDirectory.DATA
 {

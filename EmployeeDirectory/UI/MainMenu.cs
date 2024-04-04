@@ -1,7 +1,4 @@
 ﻿using EmployeeDirectory.Interfaces;
-using EmployeeDirectory.UI.Menus;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 
 namespace EmployeeDirectory.UI
 {

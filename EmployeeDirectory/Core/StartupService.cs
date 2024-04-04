@@ -4,6 +4,7 @@ using EmployeeDirectory.UI.UIServices;
 using EmployeeDirectory.UI;
 using Microsoft.Extensions.DependencyInjection;
 using EmployeeDirectory.Services;
+using EmployeeDirectory.Controllers;
 
 namespace EmployeeDirectory.Core
 {
@@ -24,11 +25,11 @@ namespace EmployeeDirectory.Core
             services.AddSingleton<IEmployeeMenu, EmployeeMenu>();
             services.AddSingleton<IRoleMenu, RoleMenu>();
             services.AddSingleton<IValidator, Validator>();
+            services.AddSingleton<IEmployeeController, EmployeeController>();
+            services.AddSingleton<IRoleController, RoleController>();
             services.AddSingleton<MainMenu>();
 
             return services.BuildServiceProvider();
         }
-
-
     }
 }

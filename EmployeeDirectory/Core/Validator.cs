@@ -1,6 +1,5 @@
 ﻿using EmployeeDirectory.Interfaces;
 using System.Text.RegularExpressions;
-using EmployeeDirectory.Core;
 namespace EmployeeDirectory.Core
 {
     internal class Validator : IValidator
@@ -17,29 +16,48 @@ namespace EmployeeDirectory.Core
             if (value == null || value.Equals(""))
             {
                 return ValidationResult.Fail("Blank Value");
-                //return 0;   //Blank Value
             }
             else
             {
-                if (parameter.Equals("empId"))
+                string pattern;
+                switch (parameter)
                 {
-                    string pattern = @"TZ\d{4}";
-                    Match m = Regex.Match(value, pattern);
+                    case "empId":
+                        pattern = @"TZ\d{4}";
+                        Match m = Regex.Match(value, pattern);
 
-                    if (employeeService.DoesEmployeeIdExist(value))
-                    {
-                        return ValidationResult.Fail("Id already exists");
+                        if (employeeService.GetEmployeeById(value) != null)
+                        {
+                            return ValidationResult.Fail("Id already exists");
 
-                        
-                    }
-                    else if (!m.Success)
-                    {
-                        return ValidationResult.Fail("Invalid Id format");
-                    }
+
+                        }
+                        else if (!m.Success)
+                        {
+                            return ValidationResult.Fail("Invalid Id format");
+                        }
+                        break;
+                    case "email":
+                        pattern = @"^[\w-\.]+@([\w]+\.)+[\w]{2,4}$";
+                       
+                        if (!Regex.Match(value, pattern).Success)
+                        {
+                            return ValidationResult.Fail("Invalid email format");
+                        }
+                        break;
+                    case "mobileNumber":
+                        pattern = @"\d{10}";
+
+                        if (!Regex.Match(value, pattern).Success)
+                        {
+                            return ValidationResult.Fail("Invalid Number format");
+                        }
+                        break;
+                    default:
+                        return ValidationResult.Success();
                 }
             }
             return ValidationResult.Success();
         }
-
     }
 }
