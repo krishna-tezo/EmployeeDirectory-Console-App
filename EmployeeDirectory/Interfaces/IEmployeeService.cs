@@ -4,13 +4,12 @@ namespace EmployeeDirectory.Interfaces
 {
     public interface IEmployeeService
     {
-        //return employee
-        void AddEmployee(Employee employee);
-        int DeleteEmployee(string empId);
+        Employee AddEmployee(Employee employee);
+        Employee DeleteEmployee(string empId);
         bool DoesEmployeeIdExist(string id);
         Employee GetEmployeeById(string id);
         List<Employee> GetEmployees();
-        void UpdateEmployee(Employee employee);
+        Employee UpdateEmployee(Employee employee);
 
     }
 }

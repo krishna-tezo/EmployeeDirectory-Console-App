@@ -3,8 +3,9 @@ using EmployeeDirectory.UI.Menus;
 using EmployeeDirectory.UI.UIServices;
 using EmployeeDirectory.UI;
 using Microsoft.Extensions.DependencyInjection;
+using EmployeeDirectory.Services;
 
-namespace EmployeeDirectory.Services
+namespace EmployeeDirectory.Core
 {
     public class StartupService
     {
@@ -12,10 +13,10 @@ namespace EmployeeDirectory.Services
         private IServiceCollection services;
         public StartupService(IServiceCollection services)
         {
-            this.services = services; 
+            this.services = services;
         }
 
-        public void Configure()
+        public ServiceProvider Configure()
         {
             services.AddSingleton<IEmployeeService, EmployeeService>();
             services.AddSingleton<IRoleService, RoleService>();
@@ -25,22 +26,9 @@ namespace EmployeeDirectory.Services
             services.AddSingleton<IValidator, Validator>();
             services.AddSingleton<MainMenu>();
 
-            services.BuildServiceProvider();
+            return services.BuildServiceProvider();
         }
 
-        public void ShowMainMenu()
-        {
-            ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            MainMenu? menu = serviceProvider.GetService<MainMenu>();
-            if(menu != null)
-            {
-                menu.ShowMainMenu();
-            }
-            else
-            {
-                Console.WriteLine("Some Error Occurred");
-            }
-        }
     }
 }

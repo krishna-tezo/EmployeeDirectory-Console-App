@@ -13,14 +13,12 @@ namespace EmployeeDirectory.UI.Menus
         }
         public void ShowRoleMenu()
         {
-
-            List<Role> roles = new List<Role>();
-            string roleId = string.Empty;
+            Console.Clear();
             Console.WriteLine("\nWelcome to Role Management\n");
             string choice;
-            bool loopMenu = true;
-            Console.Clear();
-            while (loopMenu)
+            bool showRoleMenu = true;
+
+            while (showRoleMenu)
             {
                 Console.WriteLine("\nRole Menu\n");
                 Console.WriteLine("1. Add Role");
@@ -41,7 +39,7 @@ namespace EmployeeDirectory.UI.Menus
 
                         break;
                     case "3":
-                        loopMenu = false;
+                        showRoleMenu = false;
                         break;
                     default:
                         Console.WriteLine("Invalid Input! Please Re-Enter");

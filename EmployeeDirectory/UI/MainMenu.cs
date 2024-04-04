@@ -21,9 +21,9 @@ namespace EmployeeDirectory.UI
         {
             Console.Clear();
             string choice;
-            //update the name
-            bool loopMenu = true;
-            while (loopMenu)
+            bool showMenu = true;
+
+            while (showMenu)
             {
                 Console.WriteLine("\nMain Menu\n");
                 Console.WriteLine("1. Employee Management\n2. Role Management\n3. Exit\n");
@@ -38,7 +38,7 @@ namespace EmployeeDirectory.UI
                         roleMenu.ShowRoleMenu();
                         break;
                     case "3":
-                        loopMenu = false;
+                        showMenu = false;
                         break;
                     default:
                         Console.WriteLine("Invalid Input! Please Re-Enter");

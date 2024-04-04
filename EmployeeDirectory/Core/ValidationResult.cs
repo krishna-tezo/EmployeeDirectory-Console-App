@@ -1,6 +1,6 @@
-﻿namespace EmployeeDirectory.Common
+﻿namespace EmployeeDirectory.Core
 {
-    internal class ValidationResult
+    public class ValidationResult
     {
         public bool IsValid { get; set; }
         public string ErrorMessage { get; set; }

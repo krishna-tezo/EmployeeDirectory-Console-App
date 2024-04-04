@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using EmployeeDirectory.Services;
+using EmployeeDirectory.UI;
+using EmployeeDirectory.Core;
 
 namespace EmployeeDirectory
 {
@@ -10,8 +11,20 @@ namespace EmployeeDirectory
             IServiceCollection services = new ServiceCollection();
             StartupService startupService = new StartupService(services);
 
-            startupService.Configure();
-            startupService.ShowMainMenu();
+            ServiceProvider serviceProvider = startupService.Configure();
+            StartApplication(serviceProvider);
+        }
+        public static void StartApplication(ServiceProvider serviceProvider)
+        {
+            MainMenu? menu = serviceProvider.GetService<MainMenu>();
+            if (menu != null)
+            {
+                menu.ShowMainMenu();
+            }
+            else
+            {
+                Console.WriteLine("Some Error Occurred");
+            }
         }
     }
 }

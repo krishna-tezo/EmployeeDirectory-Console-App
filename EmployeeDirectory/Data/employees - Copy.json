@@ -9,6 +9,7 @@
     "ManagerName": "Manager1",
     "ProjectName": "Project1",
     "JoinDate": "2023-03-12",
+    "IsDeleted": true,
     "RoleId": "FulHyd"
   },
   {
@@ -21,6 +22,7 @@
     "ManagerName": "Manager1",
     "ProjectName": "Project1",
     "JoinDate": "2023-03-12",
+    "IsDeleted": true,
     "RoleId": "FulHyd"
   },
   {
@@ -33,6 +35,7 @@
     "ManagerName": "Manager4",
     "ProjectName": "Project4",
     "JoinDate": "2023-06-10",
+    "IsDeleted": false,
     "RoleId": "FulMum"
   },
   {
@@ -45,6 +48,7 @@
     "ManagerName": "Manager2",
     "ProjectName": "Project2",
     "JoinDate": "2021-11-10",
+    "IsDeleted": false,
     "RoleId": "TalMum"
   },
   {
@@ -57,6 +61,7 @@
     "ManagerName": "Manager2",
     "ProjectName": "Project2",
     "JoinDate": "2023-04-20",
+    "IsDeleted": false,
     "RoleId": "BacHyd"
   },
   {
@@ -69,6 +74,7 @@
     "ManagerName": "Manager3",
     "ProjectName": "Project3",
     "JoinDate": "2023-05-15",
+    "IsDeleted": false,
     "RoleId": "BacMum"
   },
   {
@@ -81,6 +87,7 @@
     "ManagerName": "Manager6",
     "ProjectName": "Project6",
     "JoinDate": "2023-08-05",
+    "IsDeleted": false,
     "RoleId": "FroHyd"
   },
   {
@@ -93,6 +100,7 @@
     "ManagerName": "Manager5",
     "ProjectName": "Project5",
     "JoinDate": "2023-07-20",
+    "IsDeleted": false,
     "RoleId": "FulHyd"
   },
   {
@@ -105,6 +113,7 @@
     "ManagerName": "Manager1",
     "ProjectName": "Project2",
     "JoinDate": "2022-08-25",
+    "IsDeleted": false,
     "RoleId": "BacBan"
   },
   {
@@ -117,6 +126,7 @@
     "ManagerName": "Manager7",
     "ProjectName": "Project7",
     "JoinDate": "2023-09-18",
+    "IsDeleted": false,
     "RoleId": "FroMum"
   },
   {
@@ -129,6 +139,7 @@
     "ManagerName": "Manager1",
     "ProjectName": "Project2",
     "JoinDate": "2022-08-25",
+    "IsDeleted": false,
     "RoleId": "BacBan"
   },
   {
@@ -141,6 +152,7 @@
     "ManagerName": "Manager8",
     "ProjectName": "Project8",
     "JoinDate": "2023-10-25",
+    "IsDeleted": false,
     "RoleId": "FroBan"
   },
   {
@@ -153,6 +165,7 @@
     "ManagerName": "Manager2",
     "ProjectName": "Project1",
     "JoinDate": "2021-11-10",
+    "IsDeleted": false,
     "RoleId": "TalHyd"
   },
   {
@@ -165,6 +178,7 @@
     "ManagerName": "Manager2",
     "ProjectName": "Project1",
     "JoinDate": "2020-04-05",
+    "IsDeleted": false,
     "RoleId": "TalMum"
   },
   {
@@ -177,6 +191,7 @@
     "ManagerName": "Manager2",
     "ProjectName": "Project1",
     "JoinDate": "2020-04-05",
+    "IsDeleted": false,
     "RoleId": "TalMum"
   },
   {
@@ -189,6 +204,7 @@
     "ManagerName": "Sarah Johnson",
     "ProjectName": "Database Management",
     "JoinDate": "2023-07-15",
+    "IsDeleted": false,
     "RoleId": "FulBan"
   },
   {
@@ -201,6 +217,7 @@
     "ManagerName": "Edgar Holmes",
     "ProjectName": "UI/UX",
     "JoinDate": "2023-03-12",
+    "IsDeleted": false,
     "RoleId": "FulHyd"
   },
   {
@@ -213,6 +230,7 @@
     "ManagerName": "Edgar Holmes",
     "ProjectName": "UI/UX",
     "JoinDate": "2023-03-12",
+    "IsDeleted": false,
     "RoleId": "FulHyd"
   },
   {
@@ -225,6 +243,7 @@
     "ManagerName": "Edgar Holmes",
     "ProjectName": "UI/UX",
     "JoinDate": "2023-03-12",
+    "IsDeleted": false,
     "RoleId": "FulHyd"
   }
 ]

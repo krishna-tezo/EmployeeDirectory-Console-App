@@ -1,7 +1,7 @@
 ﻿using EmployeeDirectory.Models;
 using Newtonsoft.Json;
 
-namespace EmployeeDirectory.DAL
+namespace EmployeeDirectory.DATA
 {
     public class JsonDataHandler
     {

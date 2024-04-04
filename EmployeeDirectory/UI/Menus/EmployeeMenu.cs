@@ -14,9 +14,9 @@ namespace EmployeeDirectory.UI.Menus
             Console.Clear();
             Console.WriteLine("\nWelcome to Employee Management\n");
             string choice;
-            bool loopMenu = true;
+            bool showEmployeeMenu = true;
 
-            while (loopMenu)
+            while (showEmployeeMenu)
             {
                 Console.WriteLine("\nEmployee Menu\n");
                 Console.WriteLine("1. Add Employee");
@@ -46,7 +46,7 @@ namespace EmployeeDirectory.UI.Menus
                         uiService.DeleteEmployee();
                         break;
                     case "6":
-                        loopMenu = false;
+                        showEmployeeMenu = false;
                         break;
                     default:
                         Console.WriteLine("Invalid Input! Please Re-Enter");

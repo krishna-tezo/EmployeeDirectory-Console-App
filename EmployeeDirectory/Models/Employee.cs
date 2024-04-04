@@ -2,16 +2,16 @@
 {
     public class Employee
     {
-        //Id
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string Dob { get; set; }  //datetime
+        public DateTime Dob { get; set; }
         public string MobileNumber { get; set; }
         public string ManagerName { get; set; }
         public string ProjectName { get; set; }
-        public string JoinDate { get; set; }
+        public DateTime JoinDate { get; set; }
+        public bool IsDeleted {get; set;}   
         public string RoleId { get; set; }
 
 

@@ -1,8 +1,7 @@
 ﻿using EmployeeDirectory.Interfaces;
-using EmployeeDirectory.Models;
 using System.Text.RegularExpressions;
-
-namespace EmployeeDirectory.Services
+using EmployeeDirectory.Core;
+namespace EmployeeDirectory.Core
 {
     internal class Validator : IValidator
     {
@@ -13,12 +12,12 @@ namespace EmployeeDirectory.Services
             this.employeeService = employeeService;
         }
 
-        public int IsValidInput(string value, string parameter = "")
+        public ValidationResult IsValidInput(string value, string parameter = "")
         {
             if (value == null || value.Equals(""))
             {
-                
-                return 0;   //Blank Value
+                return ValidationResult.Fail("Blank Value");
+                //return 0;   //Blank Value
             }
             else
             {
@@ -28,36 +27,19 @@ namespace EmployeeDirectory.Services
                     Match m = Regex.Match(value, pattern);
 
                     if (employeeService.DoesEmployeeIdExist(value))
-                    {   
-                        return -1;  //Id Already Exists
+                    {
+                        return ValidationResult.Fail("Id already exists");
+
+                        
                     }
                     else if (!m.Success)
                     {
-                        return -2;   //Invalid Format
+                        return ValidationResult.Fail("Invalid Id format");
                     }
                 }
             }
-            return 1;
+            return ValidationResult.Success();
         }
-
-        public string ShowErrorMessage(int errorCode)
-        {
-
-            switch (errorCode)
-            {
-                case -2:
-                    return "Invalid Format";
-                case -1:
-                    return "Id already exists";
-                case 0:
-                    return "Please provide some value.";
-                default:
-                    return "Unexpected Error";
-            }
-
-        }
-
-
 
     }
 }
