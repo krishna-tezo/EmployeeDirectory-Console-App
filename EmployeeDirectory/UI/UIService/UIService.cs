@@ -1,6 +1,7 @@
 ﻿using EmployeeDirectory.Core;
 using EmployeeDirectory.Interfaces;
 using EmployeeDirectory.Models;
+using EmployeeDirectory.Models.ViewModel;
 using System.Globalization;
 
 
@@ -9,9 +10,9 @@ namespace EmployeeDirectory.UI.UIServices
     internal class UIService : IUIService
     {
 
-        private IRoleController roleController;
-        private IEmployeeController employeeController;
-        private IValidator validator;
+        private readonly IRoleController roleController;
+        private readonly IEmployeeController employeeController;
+        private readonly IValidator validator;
 
         public UIService(IEmployeeController employeeController, IRoleController roleController, IValidator validator)
         {
@@ -42,7 +43,7 @@ namespace EmployeeDirectory.UI.UIServices
             {
                 Console.Write("Input Id of the Employee which you want to Edit or -1 to exit: ");
                 empId = Console.ReadLine();
-                if (empId.Equals("-1"))
+                if (empId!.Equals("-1"))
                 {
                     break;
                 }
@@ -69,7 +70,7 @@ namespace EmployeeDirectory.UI.UIServices
         }
 
         //Get Employee Details From Console
-        public Employee GetEmployeeDetailsFromConsole(Employee employee, string type, string empId = "")
+        public Employee GetEmployeeDetailsFromConsole(Employee employee, string type, string? empId = "")
         {
 
             Console.WriteLine("----Input Employee Details----");
@@ -90,7 +91,7 @@ namespace EmployeeDirectory.UI.UIServices
 
             }
 
-            string firstName;
+            string? firstName;
             do
             {
                 Console.Write("Enter First Name:");
@@ -116,7 +117,7 @@ namespace EmployeeDirectory.UI.UIServices
             }
             while (result.IsValid == false);
 
-            string email;
+            string? email;
             do
             {
                 Console.Write("Enter Email:");
@@ -145,7 +146,7 @@ namespace EmployeeDirectory.UI.UIServices
             }
             while (true);
 
-            string mobileNumber;
+            string? mobileNumber;
             do
             {
                 Console.Write("Enter Mobile No.:");
@@ -158,7 +159,7 @@ namespace EmployeeDirectory.UI.UIServices
             }
             while (result.IsValid == false);
 
-            string managerName;
+            string? managerName;
             do
             {
                 Console.Write("Enter Manager Name:");
@@ -171,7 +172,7 @@ namespace EmployeeDirectory.UI.UIServices
             }
             while (result.IsValid == false);
 
-            string projectName;
+            string? projectName;
             do
             {
                 Console.Write("Enter Project Name:");
@@ -205,13 +206,13 @@ namespace EmployeeDirectory.UI.UIServices
             string? roleName = GetEmployeeRoleDetails("roleName", department);
             string? location = GetEmployeeRoleDetails("location", department, roleName);
 
-            employee.Id = empId;
-            employee.FirstName = firstName;
-            employee.LastName = lastName;
-            employee.Email = email;
+            employee.Id = empId!;
+            employee.FirstName = firstName!;
+            employee.LastName = lastName!;
+            employee.Email = email!;
             employee.JoinDate = joinDate;
-            employee.ManagerName = managerName;
-            employee.ProjectName = projectName;
+            employee.ManagerName = managerName!;
+            employee.ProjectName = projectName!;
             employee.IsDeleted = false;
 
             string roleId = roleController.GetRoleId(roleName, location);
@@ -247,7 +248,7 @@ namespace EmployeeDirectory.UI.UIServices
                 options = roleController.GetAllLocationByDepartmentAndRoleNames(roleName);
             }
 
-            Dictionary<string, string> optionsMap = new Dictionary<string, string>();
+            Dictionary<string, string> optionsMap = [];
 
             options.ForEach(option =>
             {
@@ -258,7 +259,7 @@ namespace EmployeeDirectory.UI.UIServices
 
             Console.Write("\nChoose Option:");
             inputKey = Console.ReadLine();
-            if (!optionsMap.ContainsKey(inputKey))
+            if (!optionsMap.ContainsKey(inputKey!))
             {
                 Console.WriteLine("Please Enter a valid option");
                 if (parameter.Equals("department"))
@@ -274,30 +275,33 @@ namespace EmployeeDirectory.UI.UIServices
                     return GetEmployeeRoleDetails("location", department, roleName);
                 }
             }
-            return optionsMap[inputKey];
+            return optionsMap[inputKey!];
         }
 
         //View Employees in Console
         public void ViewEmployees()
         {
-            List<Employee> employees = employeeController.ViewEmployees();
-
-            if (employees is null || employees.Count == 0)
+            List<EmployeeView> employeesToView = employeeController.ViewEmployees();
+            
+            if (employeesToView is null || employeesToView.Count == 0)
                 Console.WriteLine("No Employees To Show");
             else
-                this.ShowEmployeesDataInTabularFormat(employees);
+                this.ShowEmployeesDataInTabularFormat(employeesToView);
         }
 
         //View Single Employee
         public void ViewEmployee()
         {
 
+            List<EmployeeView> employeesToView = [];
+
             while (true)
             {
                 Console.WriteLine("Enter the emp Id to fetch the employee or -1 to exit:");
                 string? empId = Console.ReadLine();
-                Employee employee = employeeController.ViewEmployee(empId);
-                if (empId.Equals("-1"))
+                
+                EmployeeView employee = employeeController.ViewEmployee(empId!);
+                if (empId!.Equals("-1"))
                 {
                     break;
                 }
@@ -307,7 +311,8 @@ namespace EmployeeDirectory.UI.UIServices
                 }
                 else
                 {
-                    ShowEmployeesDataInTabularFormat(employee);
+                    employeesToView.Add(employee);
+                    ShowEmployeesDataInTabularFormat(employeesToView);
                     break;
                 }
             }
@@ -342,50 +347,22 @@ namespace EmployeeDirectory.UI.UIServices
         }
 
         //Representation of Data in Tabular Format
-        public void ShowEmployeesDataInTabularFormat(List<Employee> employees)
+        public void ShowEmployeesDataInTabularFormat(List<EmployeeView> employees)
         {
             Console.WriteLine("\nEmployee List");
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             string headers = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|", "EmpId", "Name", "Role", "Department", "Location", "Join Date", "Manager Name", "Project Name");
             Console.WriteLine(headers);
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            List<Role> roles = roleController.ViewRoles();
-
-            employees.Join(roles, emp => emp.RoleId, role => role.Id, (employee, role) =>
-            new
+            employees.ForEach((emp) =>
             {
-                employee.Id,
-                EmpName = $"{employee.FirstName} {employee.LastName}",
-                role.Name,
-                role.Department,
-                role.Location,
-                employee.JoinDate,
-                employee.ManagerName,
-                employee.ProjectName
-            }).ToList().ForEach(emp =>
-                {
-                    string empData = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|",
-                        emp.Id, emp.EmpName, emp.Name, emp.Department, emp.Location, emp.JoinDate.ToString("MM/dd/yyyy"), emp.ManagerName, emp.ProjectName);
-
-                    Console.WriteLine(empData);
-                });
+                string empData = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|",
+                        emp.Id, emp.Name, emp.Role, emp.Department, emp.Location, emp.JoinDate.ToString("MM/dd/yyyy"), emp.ManagerName, emp.ProjectName);
+                Console.WriteLine(empData);
+            });
 
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         }
-
-        public void ShowEmployeesDataInTabularFormat(Employee employee)
-        {
-            Console.WriteLine("\nEmployee List");
-            Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            string headers = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|", "EmpId", "Name", "Role", "Department", "Location", "Join Date", "Manager Name", "Project Name");
-            Console.WriteLine(headers);
-            Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            Role role = roleController.GetRole(employee.RoleId);
-            string empData = String.Format("|{0,10}|{1,20}|{2,30}|{3,20}|{4,20}|{5,20}|{6,20}|{7,20}|", employee.Id, employee.FirstName + " " + employee.LastName, role.Name, role.Department, role.Location, employee.JoinDate.ToString("MM/dd/yyyy"), employee.ManagerName, employee.ProjectName);
-            Console.WriteLine(empData);
-            Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        }
-
         #endregion
 
 
@@ -415,7 +392,7 @@ namespace EmployeeDirectory.UI.UIServices
                 Console.Write("Enter Description:");
                 description = Console.ReadLine();
 
-                roleId = roleController.GetRoleId(roleName, location);
+                roleId = roleController.GetRoleId(roleName!, location!);
 
                 if (DoesRoleIdExist(roleId))
                     Console.WriteLine("This role already exists");
@@ -423,13 +400,13 @@ namespace EmployeeDirectory.UI.UIServices
                     break;
             } while (true);
 
-            Role role = new Role();
+            Role role = new();
 
             role.Id = roleId;
-            role.Name = roleName;
-            role.Location = location;
+            role.Name = roleName!;
+            role.Location = location!;
             role.Department = department;
-            role.Description = description;
+            role.Description = description!;
 
 
             roleController.Add(role);

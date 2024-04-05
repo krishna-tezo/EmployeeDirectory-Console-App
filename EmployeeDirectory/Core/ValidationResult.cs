@@ -3,9 +3,9 @@
     public class ValidationResult
     {
         public bool IsValid { get; set; }
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
-        public static ValidationResult Success(string errorMessage = null)
+        public static ValidationResult Success(string errorMessage = null!)
         {
             return new ValidationResult
             {

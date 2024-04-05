@@ -1,5 +1,6 @@
 ﻿using EmployeeDirectory.Interfaces;
 using EmployeeDirectory.Models;
+using EmployeeDirectory.Models.ViewModel;
 
 namespace EmployeeDirectory.Controllers
 {
@@ -11,13 +12,13 @@ namespace EmployeeDirectory.Controllers
         {
             this.employeeService = employeeService;
         }
-        public List<Employee> ViewEmployees()
+        public List<EmployeeView> ViewEmployees()
         {
-            return employeeService.GetEmployees();
+            return employeeService.ViewEmployees();
         }
-        public Employee ViewEmployee(string empId)
+        public EmployeeView ViewEmployee(string empId)
         {
-            return employeeService.GetEmployeeById(empId);
+            return employeeService.GetEmployeeViewById(empId);
         }
 
         public Employee GetEmployeeById(string id)

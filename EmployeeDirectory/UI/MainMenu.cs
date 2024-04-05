@@ -16,8 +16,8 @@ namespace EmployeeDirectory.UI
 
         public void ShowMainMenu()
         {
-            Console.Clear();
-            string choice;
+            //Console.Clear();
+            string? choice;
             bool showMenu = true;
 
             while (showMenu)

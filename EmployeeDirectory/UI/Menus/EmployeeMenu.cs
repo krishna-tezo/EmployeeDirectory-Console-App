@@ -4,7 +4,7 @@ namespace EmployeeDirectory.UI.Menus
 {
     public class EmployeeMenu : IEmployeeMenu
     {
-        private IUIService uiService;
+        private readonly IUIService uiService;
         public EmployeeMenu(IUIService uiService)
         {
             this.uiService = uiService;
@@ -13,7 +13,7 @@ namespace EmployeeDirectory.UI.Menus
         {
             Console.Clear();
             Console.WriteLine("\nWelcome to Employee Management\n");
-            string choice;
+            string? choice;
             bool showEmployeeMenu = true;
 
             while (showEmployeeMenu)

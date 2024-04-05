@@ -1,4 +1,5 @@
 ﻿using EmployeeDirectory.Models;
+using EmployeeDirectory.Models.ViewModel;
 
 namespace EmployeeDirectory.Interfaces
 {
@@ -11,8 +12,7 @@ namespace EmployeeDirectory.Interfaces
         void EditEmployee();
         Employee GetEmployeeDetailsFromConsole(Employee employee, string type, string empId = "");
         string GetEmployeeRoleDetails(string parameter, string department = "", string roleName = "");
-        void ShowEmployeesDataInTabularFormat(Employee employee);
-        void ShowEmployeesDataInTabularFormat(List<Employee> employees);
+        void ShowEmployeesDataInTabularFormat(List<EmployeeView> employees);
         void ShowRolesDataInTabularFormat(List<Role> roles);
         void ViewAllRoles();
         void ViewEmployee();

@@ -4,7 +4,7 @@ namespace EmployeeDirectory.UI.Menus
 {
     public class RoleMenu : IRoleMenu
     {
-        private IUIService uiService;
+        private readonly IUIService uiService;
         public RoleMenu(IUIService uiService)
         {
             this.uiService = uiService;
@@ -13,7 +13,7 @@ namespace EmployeeDirectory.UI.Menus
         {
             Console.Clear();
             Console.WriteLine("\nWelcome to Role Management\n");
-            string choice;
+            string? choice;
             bool showRoleMenu = true;
 
             while (showRoleMenu)

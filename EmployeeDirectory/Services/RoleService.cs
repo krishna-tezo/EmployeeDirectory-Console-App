@@ -6,7 +6,7 @@ namespace EmployeeDirectory.Services
 {
     internal class RoleService : IRoleService
     {
-        private List<Role> Roles = [];
+        private List<Role> Roles { get; set; }
         public RoleService()
         {
             this.Roles = GetAllRoles();
@@ -26,7 +26,7 @@ namespace EmployeeDirectory.Services
 
         public Role GetRoleDetailsById(string id)
         {
-            return Roles.Find(role => role.Id == id);
+            return Roles.Find(role => role.Id == id)!;
         }
 
         public string GenerateRoleId(string roleName, string location)
