@@ -2,15 +2,13 @@
 
 namespace EmployeeDirectory.Interfaces
 {
-    public interface IRoleService
+    public interface IRoleController
     {
-        Role AddRole(Role role);
-        string GenerateRoleId(string roleName, string location);
+        Role Add(Role role);
         List<string> GetAllDepartments();
         List<string> GetAllLocationByDepartmentAndRoleNames(string roleName);
         List<string> GetAllRoleNamesByDepartment(string department);
-        List<Role> GetAllRoles();
-        Role GetRoleDetailsById(string id);
-
+        string GetRoleId(string roleName, string location);
+        List<Role> ViewRoles();
     }
 }

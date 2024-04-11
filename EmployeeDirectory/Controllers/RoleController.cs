@@ -21,11 +21,6 @@ namespace EmployeeDirectory.Controllers
             return roleService.AddRole(role);
         }
 
-        public Role GetRole(string id)
-        {
-            return roleService.GetRoleDetailsById(id);
-        }
-
         public string GetRoleId(string roleName, string location)
         {
             return roleService.GenerateRoleId(roleName, location);

@@ -5,6 +5,7 @@ using EmployeeDirectory.UI;
 using Microsoft.Extensions.DependencyInjection;
 using EmployeeDirectory.Services;
 using EmployeeDirectory.Controllers;
+using EmployeeDirectory.DATA;
 
 namespace EmployeeDirectory.Core
 {
@@ -19,6 +20,7 @@ namespace EmployeeDirectory.Core
 
         public ServiceProvider Configure()
         {
+            services.AddSingleton<IJsonDataHandler, JsonDataHandler>();
             services.AddSingleton<IEmployeeService, EmployeeService>();
             services.AddSingleton<IRoleService, RoleService>();
             services.AddSingleton<IUIService, UIService>();

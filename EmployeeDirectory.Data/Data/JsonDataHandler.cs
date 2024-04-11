@@ -1,23 +1,24 @@
-﻿using Newtonsoft.Json;
+﻿using EmployeeDirectory.Models;
+using Newtonsoft.Json;
 
 namespace EmployeeDirectory.DATA
 {
-    public class JsonDataHandler
+    public class JsonDataHandler : IJsonDataHandler
     {
-        public static List<T> GetDataFromJson<T>(string type)
+        public List<T> GetDataFromJson<T>()
         {
             string data;
             List<T>? dataList = [];
             try
             {
-                if (type.Equals("employee"))
+                if (typeof(T) == typeof(Employee))
                 {
-                    data = File.ReadAllText(Directory.GetCurrentDirectory() + "\\DATA\\employees.json");
+                    data = File.ReadAllText(Path.Combine("DATA", "employees.json"));
                     dataList = System.Text.Json.JsonSerializer.Deserialize<List<T>>(data);
                 }
                 else
                 {
-                    data = File.ReadAllText(Directory.GetCurrentDirectory() + "\\DATA\\roles.json");
+                    data = File.ReadAllText(Path.Combine("DATA", "roles.json"));
                     dataList = System.Text.Json.JsonSerializer.Deserialize<List<T>>(data);
                 }
             }
@@ -25,20 +26,26 @@ namespace EmployeeDirectory.DATA
             {
                 Console.WriteLine(ex.Message);
             }
+
+            if (dataList == null)
+            {
+                return new List<T>();
+            }
             return dataList;
         }
 
-        public static void UpdateEmployeesDataToJson<T>(List<T> listData,string type){
+        public void UpdateDataToJson<T>(List<T> listData)
+        {
 
             string updatedList = JsonConvert.SerializeObject(listData);
             string path;
-            if (type .Equals("employee"))
+            if (typeof(T) == typeof(Employee))
             {
-                path = Directory.GetCurrentDirectory() + "\\DATA\\employees.json";
+                path = Path.Combine("DATA", "employees.json");
             }
             else
             {
-                path = Directory.GetCurrentDirectory() + "\\DATA\\roles.json";
+                path = Path.Combine("DATA", "roles.json");
             }
             File.WriteAllText(path, updatedList);
         }

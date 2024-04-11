@@ -4,29 +4,26 @@ using EmployeeDirectory.Models;
 
 namespace EmployeeDirectory.Services
 {
-    internal class RoleService : IRoleService
+    public class RoleService : IRoleService
     {
         private List<Role> Roles { get; set; }
-        public RoleService()
+        private IJsonDataHandler jsonDataHandler;
+        public RoleService(IJsonDataHandler jsonDataHandler)
         {
+            this.jsonDataHandler = jsonDataHandler;
             this.Roles = GetAllRoles();
         }
         public Role AddRole(Role role)
         {
             Roles.Add(role);
-            JsonDataHandler.UpdateEmployeesDataToJson(Roles, "roles");
+            jsonDataHandler.UpdateDataToJson(Roles);
             return role;
         }
 
         public List<Role> GetAllRoles()
         {
-            List<Role> roles = JsonDataHandler.GetDataFromJson<Role>("roles");
+            List<Role> roles = jsonDataHandler.GetDataFromJson<Role>();
             return roles;
-        }
-
-        public Role GetRoleDetailsById(string id)
-        {
-            return Roles.Find(role => role.Id == id)!;
         }
 
         public string GenerateRoleId(string roleName, string location)

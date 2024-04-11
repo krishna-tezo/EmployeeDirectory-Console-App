@@ -1,4 +1,5 @@
 ﻿using EmployeeDirectory.Models;
+using EmployeeDirectory.Models.Models;
 using EmployeeDirectory.Models.ViewModel;
 
 namespace EmployeeDirectory.Interfaces
@@ -10,7 +11,8 @@ namespace EmployeeDirectory.Interfaces
         void DeleteEmployee();
         bool DoesRoleIdExist(string roleId);
         void EditEmployee();
-        Employee GetEmployeeDetailsFromConsole(Employee employee, string type, string empId = "");
+        //add enums for maintaining add/edit functionalities
+        Employee GetEmployeeDetailsFromConsole(Employee employee, EmployeeFormType formType, string empId = "");
         string GetEmployeeRoleDetails(string parameter, string department = "", string roleName = "");
         void ShowEmployeesDataInTabularFormat(List<EmployeeView> employees);
         void ShowRolesDataInTabularFormat(List<Role> roles);

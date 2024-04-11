@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EmployeeDirectory.Core;
 using EmployeeDirectory.UI;
-using EmployeeDirectory.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EmployeeDirectory
 {
     public static class Program
     {
         public static void Main(string[] args)
-        { 
+        {
             IServiceCollection services = new ServiceCollection();
             StartupService startupService = new StartupService(services);
 

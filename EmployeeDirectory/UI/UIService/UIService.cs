@@ -1,6 +1,7 @@
 ﻿using EmployeeDirectory.Core;
 using EmployeeDirectory.Interfaces;
 using EmployeeDirectory.Models;
+using EmployeeDirectory.Models.Models;
 using EmployeeDirectory.Models.ViewModel;
 using System.Globalization;
 
@@ -27,7 +28,7 @@ namespace EmployeeDirectory.UI.UIServices
         public void AddEmployee()
         {
             Console.WriteLine("\n----Welcome to Add Employee Form----\n");
-            Employee employee = GetEmployeeDetailsFromConsole(new Employee(), "Add");
+            Employee employee = GetEmployeeDetailsFromConsole(new Employee(), EmployeeFormType.Add);
             employeeController.AddEmployee(employee);
             Console.WriteLine("The employee is added successfully");
         }
@@ -35,7 +36,7 @@ namespace EmployeeDirectory.UI.UIServices
         //Edit Employee
         public void EditEmployee()
         {
-            Employee employee;
+            Employee? employee;
             Console.WriteLine("\n----Welcome To Edit Employee Form----\n");
 
             string? empId;
@@ -47,48 +48,42 @@ namespace EmployeeDirectory.UI.UIServices
                 {
                     break;
                 }
-                else if (empId.Equals(""))
+                else if (string.IsNullOrEmpty(empId))
                 {
                     Console.WriteLine("Don't leave it blank");
                 }
-                else if (employeeController.GetEmployeeById(empId)==null)
-                {
-                    Console.WriteLine($"{empId} does not exist");
-                }
                 else
-                {   
+                {
                     employee = employeeController.GetEmployeeById(empId);
 
-                    employee = GetEmployeeDetailsFromConsole(employee, "Edit", empId);
-                    employeeController.EditEmployee(employee);
-                    Console.WriteLine($"Employee with id {empId} is updated successfully");
-                    break;
-                }
+                    if (employee == null)
+                    {
+                        Console.WriteLine($"{empId} does not exist");
+                    }
+                    else
+                    {
+                        employee = GetEmployeeDetailsFromConsole(employee, EmployeeFormType.Edit, empId);
+                        employeeController.EditEmployee(employee);
+                        Console.WriteLine($"Employee with id {empId} is updated successfully");
+                        break;
+                    }
 
+                }
             }
             while (true);
         }
 
+
         //Get Employee Details From Console
-        public Employee GetEmployeeDetailsFromConsole(Employee employee, string type, string? empId = "")
+        public Employee GetEmployeeDetailsFromConsole(Employee employee, EmployeeFormType formType, string? empId = "")
         {
 
             Console.WriteLine("----Input Employee Details----");
             ValidationResult result;
 
-            if (type.Equals("Add"))
+            if (formType == EmployeeFormType.Add)
             {
-                do
-                {
-                    Console.Write("Enter Employee Id(TZ0000):");
-
-                    empId = Console.ReadLine();
-                    result = validator.IsValidInput(empId, "empId");
-                    if (result.IsValid != true)
-                        Console.WriteLine(result.ErrorMessage);
-                }
-                while (result.IsValid == false);
-
+                empId = employeeController.GetNewEmployeeId();
             }
 
             string? firstName;
@@ -97,12 +92,18 @@ namespace EmployeeDirectory.UI.UIServices
                 Console.Write("Enter First Name:");
 
                 firstName = Console.ReadLine();
-                result = validator.IsValidInput(firstName, "firstName");
-                if (result.IsValid != true)
-                    Console.WriteLine(result.ErrorMessage);
+                if (string.IsNullOrEmpty(firstName))
+                {
+                    Console.WriteLine("Don't leave it blank");
+                }
+                else
+                {
+                    break;
+                }
 
             }
-            while (result.IsValid == false);
+            while (true);
+
 
             string? lastName;
             do
@@ -110,31 +111,49 @@ namespace EmployeeDirectory.UI.UIServices
                 Console.Write("Enter Last Name:");
 
                 lastName = Console.ReadLine();
-                result = validator.IsValidInput(lastName, "lastName");
-                if (result.IsValid != true)
-                    Console.WriteLine(result.ErrorMessage);
-
+                if (string.IsNullOrEmpty(lastName))
+                {
+                    Console.WriteLine("Don't leave it blank");
+                }
+                else
+                {
+                    break;
+                }
             }
-            while (result.IsValid == false);
+            while (true);
 
             string? email;
             do
             {
-                Console.Write("Enter Email:");
+                Console.Write("Enter Mobile No.:");
 
                 email = Console.ReadLine();
-                result = validator.IsValidInput(email, "email");
-                if (result.IsValid != true)
-                    Console.WriteLine(result.ErrorMessage);
 
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    Console.WriteLine("Don't leave it blank");
+                }
+                else
+                {
+                    result = validator.ValidateEmail(email);
+
+                    if (result.IsValid != true)
+                    {
+                        Console.WriteLine(result.ErrorMessage);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
-            while (result.IsValid == false);
+            while (true);
 
             DateTime dob;
             do
             {
                 Console.Write("Enter Dob (mm/dd/yyyy):");
-
                 if (DateTime.TryParseExact(Console.ReadLine(), "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dob))
                 {
                     break;
@@ -142,6 +161,7 @@ namespace EmployeeDirectory.UI.UIServices
                 else
                 {
                     Console.WriteLine("Invalid Date Format");
+
                 }
             }
             while (true);
@@ -152,12 +172,28 @@ namespace EmployeeDirectory.UI.UIServices
                 Console.Write("Enter Mobile No.:");
 
                 mobileNumber = Console.ReadLine();
-                result = validator.IsValidInput(mobileNumber, "mobileNumber");
-                if (result.IsValid != true)
-                    Console.WriteLine(result.ErrorMessage);
+
+
+                if (string.IsNullOrEmpty(mobileNumber))
+                {
+                    Console.WriteLine("Don't leave it blank");
+                }
+                else
+                {
+                    result = validator.ValidateMobileNumber(mobileNumber);
+
+                    if (result.IsValid != true)
+                    {
+                        Console.WriteLine(result.ErrorMessage);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
 
             }
-            while (result.IsValid == false);
+            while (true);
 
             string? managerName;
             do
@@ -165,25 +201,31 @@ namespace EmployeeDirectory.UI.UIServices
                 Console.Write("Enter Manager Name:");
 
                 managerName = Console.ReadLine();
-                result = validator.IsValidInput(managerName, "managerName");
-                if (result.IsValid != true)
-                    Console.WriteLine(result.ErrorMessage);
+                if (string.IsNullOrEmpty(managerName))
+                {
+                    Console.WriteLine("Don't leave it blank");
+                }
+                else
+                    break;
 
             }
-            while (result.IsValid == false);
+            while (true);
 
             string? projectName;
             do
             {
                 Console.Write("Enter Project Name:");
-
                 projectName = Console.ReadLine();
-                result = validator.IsValidInput(projectName, "projectName");
-                if (result.IsValid != true)
-                    Console.WriteLine(result.ErrorMessage);
-
+                if (string.IsNullOrEmpty(projectName))
+                {
+                    Console.WriteLine("Don't leave it empty");
+                }
+                else
+                {
+                    break;
+                }
             }
-            while (result.IsValid == false);
+            while (true);
 
             DateTime joinDate;
             do
@@ -206,13 +248,13 @@ namespace EmployeeDirectory.UI.UIServices
             string? roleName = GetEmployeeRoleDetails("roleName", department);
             string? location = GetEmployeeRoleDetails("location", department, roleName);
 
-            employee.Id = empId!;
-            employee.FirstName = firstName!;
-            employee.LastName = lastName!;
-            employee.Email = email!;
+            employee.Id = empId;
+            employee.FirstName = firstName;
+            employee.LastName = lastName;
+            employee.Email = email;
             employee.JoinDate = joinDate;
-            employee.ManagerName = managerName!;
-            employee.ProjectName = projectName!;
+            employee.ManagerName = managerName;
+            employee.ProjectName = projectName;
             employee.IsDeleted = false;
 
             string roleId = roleController.GetRoleId(roleName, location);
@@ -259,7 +301,7 @@ namespace EmployeeDirectory.UI.UIServices
 
             Console.Write("\nChoose Option:");
             inputKey = Console.ReadLine();
-            if (!optionsMap.ContainsKey(inputKey!))
+            if (inputKey == null || !optionsMap.ContainsKey(inputKey))
             {
                 Console.WriteLine("Please Enter a valid option");
                 if (parameter.Equals("department"))
@@ -282,7 +324,7 @@ namespace EmployeeDirectory.UI.UIServices
         public void ViewEmployees()
         {
             List<EmployeeView> employeesToView = employeeController.ViewEmployees();
-            
+
             if (employeesToView is null || employeesToView.Count == 0)
                 Console.WriteLine("No Employees To Show");
             else
@@ -293,27 +335,32 @@ namespace EmployeeDirectory.UI.UIServices
         public void ViewEmployee()
         {
 
-            List<EmployeeView> employeesToView = [];
+            List<EmployeeView>? employeesToView = [];
 
             while (true)
             {
                 Console.WriteLine("Enter the emp Id to fetch the employee or -1 to exit:");
                 string? empId = Console.ReadLine();
-                
-                EmployeeView employee = employeeController.ViewEmployee(empId!);
+                EmployeeView? employee = new();
                 if (empId!.Equals("-1"))
                 {
                     break;
                 }
-                if (employee == null)
+                else if (empId != null)
                 {
-                    Console.WriteLine("The Employee Is Not Found");
-                }
-                else
-                {
-                    employeesToView.Add(employee);
-                    ShowEmployeesDataInTabularFormat(employeesToView);
-                    break;
+                    employee = employeeController.ViewEmployee(empId);
+
+                    if (employee == null)
+                    {
+                        Console.WriteLine("The Employee Is Not Found");
+                    }
+                    else
+                    {
+                        employeesToView.Add(employee);
+                        ShowEmployeesDataInTabularFormat(employeesToView);
+                        break;
+
+                    }
                 }
             }
 
@@ -326,7 +373,7 @@ namespace EmployeeDirectory.UI.UIServices
             {
                 Console.WriteLine("Enter Employee Id You want to delete OR -1 to exit");
                 string empId = Console.ReadLine() ?? string.Empty;
-                Employee employee;
+                Employee? employee;
                 if (empId.Equals(""))
                 {
                     Console.WriteLine("Don't leave blank");
@@ -337,7 +384,9 @@ namespace EmployeeDirectory.UI.UIServices
                     if (employee == null)
                         Console.WriteLine("Employee was not found");
                     else
+                    {
                         Console.WriteLine("The Employee is Removed");
+                    }
                 }
                 else
                 {
@@ -394,19 +443,28 @@ namespace EmployeeDirectory.UI.UIServices
 
                 roleId = roleController.GetRoleId(roleName!, location!);
 
+                if(string.IsNullOrEmpty(roleName) || string.IsNullOrEmpty(location) || string.IsNullOrEmpty(description))
+                {
+                    Console.WriteLine("Don't leave any field");
+                }
                 if (DoesRoleIdExist(roleId))
+                {
                     Console.WriteLine("This role already exists");
+                }
                 else
+                {
                     break;
+                }
             } while (true);
 
-            Role role = new();
-
-            role.Id = roleId;
-            role.Name = roleName!;
-            role.Location = location!;
-            role.Department = department;
-            role.Description = description!;
+            Role role = new()
+            {
+                Id = roleId,
+                Name = roleName,
+                Location = location,
+                Department = department,
+                Description = description
+            };
 
 
             roleController.Add(role);
