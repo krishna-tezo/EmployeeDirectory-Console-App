@@ -1,11 +1,10 @@
 ﻿using EmployeeDirectory.Models;
-using EmployeeDirectory.Models.ViewModel;
 
 namespace EmployeeDirectory.Interfaces
 {
     public interface IEmployeeService
     {
-        string GenerateNewId();
+        string GenerateNewId(string firstName, string lastName);
         Employee AddEmployee(Employee employee);
         List<Employee> GetEmployees();
         Employee? DeleteEmployee(string empId);

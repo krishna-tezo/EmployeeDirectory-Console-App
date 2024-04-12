@@ -1,4 +1,4 @@
-﻿namespace EmployeeDirectory.Models.ViewModel
+﻿    namespace EmployeeDirectory.ViewModel
 {
     public class EmployeeView
     {

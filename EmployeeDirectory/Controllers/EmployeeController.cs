@@ -1,7 +1,10 @@
-﻿using EmployeeDirectory.Interfaces;
+﻿using EmployeeDirectory.UI.Interfaces;
 using EmployeeDirectory.Models;
-using EmployeeDirectory.Models.ViewModel;
-namespace EmployeeDirectory.Controllers
+using EmployeeDirectory.ViewModel;
+using EmployeeDirectory.Interfaces;
+using AutoMapper;
+using System.Data;
+namespace EmployeeDirectory.UI.Controllers
 {
     public class EmployeeController : IEmployeeController
     {
@@ -14,39 +17,67 @@ namespace EmployeeDirectory.Controllers
             this.roleService = roleService;
         }
 
-        public string GetNewEmployeeId()
+        public string GetNewEmployeeId(string firstName, string lastName)
         {
-            return employeeService.GenerateNewId();
+            return employeeService.GenerateNewId(firstName,lastName);
         }
 
-        public List<EmployeeView> ViewEmployees()
-        {   
-            List <Employee> employees = employeeService.GetEmployees();
-            List <Role> roles = roleService.GetAllRoles();
-            List<EmployeeView> employeesToView = employees.Join(roles, emp => emp.RoleId, role => role.Id, (employee, role) =>
-            new EmployeeView
+        public Mapper GetEmployeeViewMapper()
+        {
+            MapperConfiguration config = new(cfg =>
             {
-                Id = employee.Id,
-                Name = $"{employee.FirstName} {employee.LastName}",
-                Role = role.Name,
-                Department = role.Department,
-                Location = role.Location,
-                JoinDate = employee.JoinDate,
-                ManagerName = employee.ManagerName,
-                ProjectName = employee.ProjectName
+                cfg.CreateMap<Employee, EmployeeView>()
+                .ForMember(dest => dest.Name, act => act.MapFrom(src => src.FirstName + " " + src.LastName));
+
+                cfg.CreateMap<Role, EmployeeView>()
+                .ForMember(dest => dest.Role, act => act.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Id, act => act.Ignore())
+                .ForMember(dest => dest.Name, act => act.Ignore());
+            });
+           
+            return new Mapper(config);
+        }
+        public List<EmployeeView> ViewEmployees()
+        {
+
+            Mapper mapper = GetEmployeeViewMapper();
+            List<Employee> employees = employeeService.GetEmployees();
+            List<Role> roles = roleService.GetAllRoles();
+
+            List<EmployeeView> employeesToView = employees.Join(roles, emp => emp.RoleId, role => role.Id, (employee, role) =>
+            {
+                EmployeeView employeeToView = mapper.Map<Employee, EmployeeView>(employee);
+                employeeToView = mapper.Map(role,employeeToView);
+                return employeeToView;
             }).ToList();
             return employeesToView;
         }
-        
+
         public EmployeeView? ViewEmployee(string empId)
         {
-            List<EmployeeView> employees = this.ViewEmployees();
-            EmployeeView? employee = employees.Find(emp => emp.Id == empId);
-            if(employee == null)
+            Mapper mapper = GetEmployeeViewMapper();
+
+            Employee? employee = employeeService.GetEmployeeById(empId);
+
+            EmployeeView? employeeToView = new EmployeeView();
+            if (employee == null)
             {
                 return null;
             }
-            return employee;
+            else
+            {
+                Role role = roleService.GetRoleById(employee.RoleId!);
+                if (role == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    employeeToView = mapper.Map<Employee, EmployeeView>(employee);
+                    employeeToView = mapper.Map(role, employeeToView);
+                }
+            }
+            return employeeToView;
             
         }
 

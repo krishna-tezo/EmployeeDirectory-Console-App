@@ -7,41 +7,43 @@ namespace EmployeeDirectory.Services
     public class EmployeeService : IEmployeeService
     {
 
-        private List<Employee> Employees { get; set; }
+        
         private IJsonDataHandler jsonDataHandler;
         public EmployeeService(IJsonDataHandler jsonDataHandler)
         {
             this.jsonDataHandler = jsonDataHandler;
-            this.Employees = this.GetEmployees();
         }
-
-        public string GenerateNewId()
+        public string GenerateNewId(string firstName, string lastName)
         {
-            string? lastId = Employees.Last().Id;
-            if (lastId == null)
+            List<Employee> employees = this.GetEmployees();
+            Random random = new Random();
+            string newRoleId = "TZ" + firstName.Substring(0, 1).ToUpper() + lastName.Substring(0, 1).ToUpper() + (random.Next()%10000).ToString("D4");
+            if (employees.Exists((emp) => emp.Id == newRoleId))
             {
-                return "TZ0001";
+                GenerateNewId(firstName, lastName);
             }
-            return "TZ" + (int.Parse(lastId.Substring(2)) + 1).ToString();
+
+            return newRoleId;
         }
-        
 
 
         public Employee AddEmployee(Employee employee)
         {
-            Employees.Add(employee);
-            jsonDataHandler.UpdateDataToJson<Employee>(Employees);
+            List<Employee> employees = GetEmployees();
+            employees.Add(employee);
+            jsonDataHandler.UpdateDataToJson<Employee>(employees);
             return employee;
         }
 
         public Employee? DeleteEmployee(string empId)
         {
-            Employee? employee = Employees.Find(emp => emp.Id == empId);
+            List<Employee> employees = GetEmployees();
+            Employee? employee = employees.Find(emp => emp.Id == empId);
             if (employee != null)
             {
                 employee.IsDeleted = true;
-                jsonDataHandler.UpdateDataToJson<Employee>(Employees);
-                Employees.Remove(employee);
+                jsonDataHandler.UpdateDataToJson<Employee>(employees);
+                employees.Remove(employee);
                 return employee;
             }
             else
@@ -52,14 +54,14 @@ namespace EmployeeDirectory.Services
 
         public Employee UpdateEmployee(Employee newEmployee)
         {
-
-            Employee? existingEmployee = Employees.Find((emp) => emp.Id == newEmployee.Id);
+            List<Employee> employees = GetEmployees();
+            Employee? existingEmployee = employees.Find((emp) => emp.Id == newEmployee.Id);
 
             if (existingEmployee != null)
             {
                 existingEmployee = newEmployee;
             }
-            jsonDataHandler.UpdateDataToJson<Employee>(Employees);
+            jsonDataHandler.UpdateDataToJson<Employee>(employees);
             return newEmployee;
            
         }
@@ -67,10 +69,12 @@ namespace EmployeeDirectory.Services
         public List<Employee> GetEmployees()
         {
             List<Employee> employees = [];
+
             try
             {
                 employees = jsonDataHandler.GetDataFromJson<Employee>();
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
@@ -81,7 +85,8 @@ namespace EmployeeDirectory.Services
 
         public Employee GetEmployeeById(string id)
         {
-            return Employees.Find((emp) => emp.Id == id)!;
+            List<Employee> employees = GetEmployees();
+            return employees.Find((emp) => emp.Id == id)!;
         }
     }
 }

@@ -4,14 +4,6 @@ namespace EmployeeDirectory.Core
 {
     public class Validator : IValidator
     {
-        private IEmployeeService employeeService;
-
-        public Validator(IEmployeeService employeeService)
-        {
-            this.employeeService = employeeService;
-
-        }
-
         public ValidationResult ValidateEmail(string email)
         {
 
@@ -41,12 +33,6 @@ namespace EmployeeDirectory.Core
             }
             return ValidationResult.Success();
         }
-
-        public ValidationResult ValidateDate(DateTime date)
-        {
-            return ValidationResult.Fail("Invalid Date Format");
-        }
-
 
     }
 }

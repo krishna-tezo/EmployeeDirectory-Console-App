@@ -2,7 +2,8 @@
 using EmployeeDirectory.Interfaces;
 using EmployeeDirectory.Models;
 using EmployeeDirectory.Models.Models;
-using EmployeeDirectory.Models.ViewModel;
+using EmployeeDirectory.UI.Interfaces;
+using EmployeeDirectory.ViewModel;
 using System.Globalization;
 
 
@@ -81,11 +82,6 @@ namespace EmployeeDirectory.UI.UIServices
             Console.WriteLine("----Input Employee Details----");
             ValidationResult result;
 
-            if (formType == EmployeeFormType.Add)
-            {
-                empId = employeeController.GetNewEmployeeId();
-            }
-
             string? firstName;
             do
             {
@@ -125,7 +121,7 @@ namespace EmployeeDirectory.UI.UIServices
             string? email;
             do
             {
-                Console.Write("Enter Mobile No.:");
+                Console.Write("Enter email:");
 
                 email = Console.ReadLine();
 
@@ -247,6 +243,12 @@ namespace EmployeeDirectory.UI.UIServices
             string? department = GetEmployeeRoleDetails("department");
             string? roleName = GetEmployeeRoleDetails("roleName", department);
             string? location = GetEmployeeRoleDetails("location", department, roleName);
+
+            if (formType == EmployeeFormType.Add)
+            {
+                empId = employeeController.GetNewEmployeeId(firstName,lastName);
+            }
+
 
             employee.Id = empId;
             employee.FirstName = firstName;

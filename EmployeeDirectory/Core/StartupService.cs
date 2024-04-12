@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using EmployeeDirectory.Services;
 using EmployeeDirectory.Controllers;
 using EmployeeDirectory.DATA;
+using EmployeeDirectory.UI.Interfaces;
+using EmployeeDirectory.UI.Controllers;
 
 namespace EmployeeDirectory.Core
 {
